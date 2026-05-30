@@ -70,7 +70,7 @@ src/main/java
 * DTO Request and Response Objects
 * ModelMapper Object Conversion
 * Custom Exceptions
-* Global Exception Handling using @ControllerAdvice
+* Global Exception Handling using @RestControllerAdvice
 * Dependency Injection
 * Service Layer Design
 * REST API Development
