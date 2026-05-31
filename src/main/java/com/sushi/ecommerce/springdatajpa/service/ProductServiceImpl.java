@@ -22,8 +22,9 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
     @Override
     public ProductResponseDto save(ProductRequestDto productRequestDto) throws ProductExistsException {
-        productRepository.findById(productRequestDto.getId()).ifPresent(p -> {
-            throw new ProductExistsException("Product with id " + p.getId() + " already exists");
+        productRepository.findById(productRequestDto.getId())
+                .ifPresent(p -> {
+                    throw new ProductExistsException("Product with id " + p.getId() + " already exists");
         });
         //Dto to Entity
         Product product = modelMapper.map(productRequestDto,Product.class);
@@ -34,21 +35,32 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponseDto> getAll() {
-        return List.of();
+        return productRepository.findAll().stream().map(p -> modelMapper.map(p,ProductResponseDto.class)).toList();
     }
 
     @Override
-    public Optional<ProductResponseDto> getById(int id) throws ProductNotFoundException {
-        return Optional.empty();
+    public ProductResponseDto getById(int id) throws ProductNotFoundException {
+        return modelMapper.map(productRepository.findById(id)
+                .orElseThrow(() ->
+                    new ProductNotFoundException("Product with id " + id + " not found")),ProductResponseDto.class);
     }
 
     @Override
     public ProductResponseDto update(ProductUpdateRequestDto productUpdateRequestDto) throws ProductNotFoundException {
-        return null;
+        Product existingProduct = productRepository.findById(productUpdateRequestDto.getId())
+                .orElseThrow(() ->
+                    new ProductNotFoundException("Product with id " + productUpdateRequestDto.getId() + " not found"));
+
+        existingProduct.setMaxRetailPrice(productUpdateRequestDto.getMaxRetailPrice());
+        existingProduct.setDiscountPercentage(productUpdateRequestDto.getDiscountPercentage());
+        return modelMapper.map(productRepository.save(existingProduct),ProductResponseDto.class);
     }
 
     @Override
     public void delete(int id) throws ProductNotFoundException {
-
+        productRepository.findById(id)
+                .orElseThrow(() ->
+                    new ProductNotFoundException("Product with id " + id + " not found"));
+        productRepository.deleteById(id);
     }
 }

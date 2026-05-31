@@ -13,7 +13,7 @@ public interface ProductService {
 
     ProductResponseDto save(ProductRequestDto productRequestDto) throws ProductExistsException;
     List<ProductResponseDto> getAll();
-    Optional<ProductResponseDto> getById(int id) throws ProductNotFoundException;
+    ProductResponseDto getById(int id) throws ProductNotFoundException;
     ProductResponseDto update(ProductUpdateRequestDto productUpdateRequestDto) throws ProductNotFoundException;
     void delete(int id) throws ProductNotFoundException;
 }

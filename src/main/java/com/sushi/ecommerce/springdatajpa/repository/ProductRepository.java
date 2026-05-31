@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     // JpaRepository provides basic crud methods
 
+    //derived methods
     Optional<Product> findByName(String name);
     Optional<Product> findByCategory(String category);
     Optional<Product> findByCompanyName(String companyName);
